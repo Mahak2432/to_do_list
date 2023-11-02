@@ -70,7 +70,7 @@ app.get("/", function (req, res) {
   });
 });
 
-app.post("/", function (req, res) {
+app.post("/", async function (req, res) {
 
   const itemname = req.body.newItem;
   const listname = req.body.list;
@@ -80,15 +80,15 @@ app.post("/", function (req, res) {
   });
 
   if (listname === "Today") {
-    item.save();
+    await item.save();
      
     res.redirect("/");
   }
   else{
-    List.findOne({name:listname}, function(err,foundList) {
+    List.findOne({name:listname}, async function(err,foundList) {
         if(!err){
           foundList.items.push(item);
-          foundList.save();
+          await foundList.save();
           res.redirect("/"+foundList.name);
         }
     });
@@ -97,7 +97,7 @@ app.post("/", function (req, res) {
 
 });
 
-app.post("/delete", function (req, res) {
+app.post("/delete",  function (req, res) {
 
   const checkedItemId=req.body.checkbox;
   const listitem=req.body.listName;
